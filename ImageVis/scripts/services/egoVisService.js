@@ -371,7 +371,7 @@ vishope.factory('egoVisService', ['$http', 'dataService', 'pipService',
                 } else {
                     svg.attr('height', 10);
                 }
-                // svg.selectAll('.egoExpansionWrapper').data([]).exit().remove();
+                 svg.selectAll('.egoExpansionWrapper').data([]).exit().remove();
             }
         };
 
@@ -392,7 +392,7 @@ vishope.factory('egoVisService', ['$http', 'dataService', 'pipService',
 
             // console.log("===============================================egoData",egoData);
             // var timelineConfig = egoVisService.timelineConfig ;
-            svg.select('.egoExpansionWrapper').remove();
+            svg.select('.egoExpansionWrapper').data([]).exit().remove();
             console.log(typeof svg.select('.egoExpansionWrapper'));
             // svg.append("g").attr("class","egoExpansionWrapper");
             // alert(egoData['id'].length);
