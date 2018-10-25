@@ -3,7 +3,7 @@
 vishope.controller('queryFilterCtrl', ['$scope', 'pipService', 'dataService',
         function($scope, pipService, dataService) {
             console.log("这里是queryFilterCtrl.js");
-    $scope.dataLoadFlag = 0;
+    $scope.dataLoadFlag = 1;
     $scope.queryData = {
         searchText: ''
     };
@@ -14,6 +14,7 @@ vishope.controller('queryFilterCtrl', ['$scope', 'pipService', 'dataService',
     });
 
     $scope.search = function() {
+        console.log($scope.queryData.searchText);
         pipService.emitSearchEgo($scope.queryData.searchText);
     };
 
