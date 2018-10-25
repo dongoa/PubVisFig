@@ -62,7 +62,7 @@ vishope.factory('egoVisService', ['$http', 'dataService', 'pipService',
                                 console.log(_origin_str,_reg);
                                 //这里要改成包含关系，先这样
                                 egoVisService.k_search.push(data[i]['Paper DOI']);
-                                var _open_TID = 16;
+                                var _open_TID = 17;
                                 if(data[i]['TID']) {
                                     _open_TID = parseInt(data[i]['TID'].substring(1,3));
 
@@ -78,7 +78,7 @@ vishope.factory('egoVisService', ['$http', 'dataService', 'pipService',
 
             });
             for(var _i of egoVisService._array_T)
-            $rootScope.egoList[_i].expansion=true;
+            $rootScope.egoList[_i-1].expansion=true;
             // $rootScope.$broadcast(SEARCH_EGO, msg);
             // location.reload();
             // $scope.shrinkEgoBtn = function(index) {
@@ -393,7 +393,7 @@ vishope.factory('egoVisService', ['$http', 'dataService', 'pipService',
             // console.log("===============================================egoData",egoData);
             // var timelineConfig = egoVisService.timelineConfig ;
             svg.select('.egoExpansionWrapper').data([]).exit().remove();
-            console.log(typeof svg.select('.egoExpansionWrapper'));
+            // console.log(typeof svg.select('.egoExpansionWrapper'));
             // svg.append("g").attr("class","egoExpansionWrapper");
             // alert(egoData['id'].length);
             let padding = Number(document.getElementById("paddingSlider").value);
@@ -423,7 +423,7 @@ vishope.factory('egoVisService', ['$http', 'dataService', 'pipService',
                 //scale
 
                 var svg=svg.append("g").attr("class","egoExpansionWrapper").attr("transform","translate("+(200*(p_x-2006)-100+30)+","+yy+")");
-                console.log(svg.select('.egoExpansionWrapper'));
+                // console.log(svg.select('.egoExpansionWrapper'));
                 // console.log("padding",padding);
                 var scalearea=d3.scaleLinear().range([0,9]).domain(d3.extent(data, function(d) { return d.size; })).nice();
 
@@ -441,7 +441,7 @@ vishope.factory('egoVisService', ['$http', 'dataService', 'pipService',
                 //     .sort(function(a, b) { return b.value - a.value; });
 
                 // Create bubbletreemap.
-                console.log(root);
+                // console.log(root);
 
                 let bubbletreemap = d3.bubbletreemap()
                     .padding(1.8)
@@ -545,7 +545,8 @@ vishope.factory('egoVisService', ['$http', 'dataService', 'pipService',
                     //     console.log(domaincolor);
                     //     console.log("colorload_data",colorload_data[d.data.id]);
                     //     return 'rgb('+domaincolor+')';
-                        colorload_data[d.data.id][3]=0.1;
+                        colorload_data[d.data.id][3]=0;
+                        // console.log(egoVisService.k_search,d.data.data.paperID.replace('@','/'));
                         if(egoVisService.k_search.indexOf(d.data.data.paperID.replace('@','/') )!=-1){
                             console.log("找到");
                             colorload_data[d.data.id][3]=1;
