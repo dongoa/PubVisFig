@@ -1,5 +1,4 @@
 # PubFigVis
-====
 Interactive Storyboard for Exploring Figure Collections in Structured Scientific Publications
 
 # description
