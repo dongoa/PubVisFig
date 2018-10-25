@@ -1,0 +1,21 @@
+<div id="right-sidebar" ng-controller="rightCtrl">
+<h4>  </h4>
+<!--<tabset>-->
+<!--<tab heading="Node Table" select="rightSidebar.detailedSelect = 'table'" style="cursor: pointer"></tab>-->
+<!--<tab heading="Node Filter" select="rightSidebar.detailedSelect = 'filter'" style="cursor: pointer"></tab>-->
+<!--</tabset>-->
+
+<!--<div ng-if="rightSidebar.detailedSelect == 'table'">-->
+<!--<div ng-include src="'views/queryFilter.html'">-->
+<!--</div>-->
+<div>
+<div table-directive table-config="tableConfig" table-data="currentNodes" ng-controller="tableCtrl" highlight-node="highlightNode(node)">
+
+    <div id="compare" ng-style="{'width': timelineConfig.width}" style="height: 100%">
+        <svg id="compareCanvas" width="700" height="800"></svg>
+    </div>
+    <div id="image-container1" style="width:320px;height:500px;border:1px solid #C0C0C0;overflow-y: auto;float:left;"></div>
+    <div id="image-container2" style="width:320px;height:500px;border:1px solid #C0C0C0;overflow-y: auto;float:right;"></div>
+</div>
+</div>
+</div>

@@ -1,0 +1,155 @@
+<!doctype html>
+<html class="no-js" lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Storyboard for Exploring Figure Collections in Structured Scientific Publications</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width">
+    <link href="lib/bootstrap/dist/css/bootstrap.css"  rel="stylesheet">
+    <link href="lib/jquery-ui/themes/smoothness/jquery-ui.css"  rel="stylesheet"/>
+    <link rel="stylesheet" href="lib/font-awesome/css/font-awesome.min.css" >
+    <link rel="stylesheet" href="styles/main.css" >
+    <link rel="stylesheet" href="styles/screen.css" >
+    <!--<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Karla%7CMontserrat:700">-->
+</head>
+<body ng-app="vishope">
+    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" style="color:white;font-size:30px;"><b>PaperFigVis</b>: Interactive Storyboard for Exploring Figure Collections in Structured Scientific Publications</a>
+            </div>
+            <div class="collapse navbar-collapse" ng-controller="dataSelectorCtrl" style="color:white;font-size:20px;">
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">Help</a></li>
+                </ul>
+                <form id="data-selector" class="navbar-form navbar-right">
+                    <!--<select class="form-control"-->
+                        <!--ng-model="selectedDataset"-->
+                        <!--ng-change="updateDataset(selectedDataset)"-->
+                        <!--ng-options="dataset for dataset in data.dbList">-->
+                        <!--<option value = "">Select a dataset</option>-->
+                    <!--</select>-->
+                    <button style="margin-left:10px" type="button" class="btn btn-default" ng-click="heatmap()">Control Panel</button>
+                    <button style="margin-left:10px" type="button" class="btn btn-default" ng-click="controlPanel()">Comparison</button>
+                </form>
+                <!--<ul class="nav navbar-nav navbar-right">-->
+                    <!--<li><a href="#" style="color: white; cursor: default">Dataset: </a></li>-->
+                <!--</ul>-->
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid" ng-controller="uiCtrl">
+        <div class="row">
+            <div class="col-sm-2 col-md-2 sidebar" ng-class="{invisible: uiConfig.hideHeatmap}">
+                <div ng-include src="'views/leftSidebar.html'" ></div>
+            </div>
+            <div ng-class="uiConfig.mainWidth" class="scenario-main" style="z-index: 0">
+                <div id="visPanel">
+                    <div ng-include src="'views/mainview.html'"></div>
+                </div>
+            </div>
+            <div class="col-sm-3 col-sm-offset-9 col-md-3 col-md-offset-9 sidebar" ng-class="{invisible: uiConfig.hideControlPanel}">
+                <div ng-include src="'views/rightSidebar.html'" ></div>
+            </div>
+        </div>
+        <!--<div class="row" id="mainView">-->
+        <!--</div>-->
+    </div>
+    <!--<script src="d3-hierarchy-master\src\stratify.js"></script>-->
+    <script id='image-section-template' type='text/x-mustache'>
+    {{#images}}
+    <div class="image-section {{class}}">
+      <div class="image-wrap">
+        <button class="run-functions-button">
+          <span class="no-touch-label">Click</span>
+          <span class="touch-label">Tap</span>
+        </button>
+        <img class="target-image" src="{{file}}" />
+      </div>
+      <div class="color-thief-output"></div>
+    </div>
+    {{/images}}
+  </script>
+
+    <script id="color-thief-output-template" type="text/x-mustache">
+    <div class="function get-color">
+      <h5 class="function-title">Dominant Color</h5>
+      <div class="swatches">
+        <div class="swatch" style="background-color: rgb({{color.0}}, {{color.1}}, {{color.2}})"></div>
+      </div>
+      <!--<div class="function-code">-->
+        <!--<code>colorThief.getColor(image):{{elapsedTimeForGetColor}}ms</code>-->
+      <!--</div>-->
+    </div>
+    <!--<div class="function get-palette">-->
+      <!--<h3 class="function-title">Palette</h3>-->
+      <!--<div class="function-output">-->
+        <!--<div class="swatches">-->
+          <!--{{#palette}}-->
+            <!--<div class="swatch" style="background-color: rgb({{0}}, {{1}}, {{2}})"></div>-->
+          <!--{{/palette}}-->
+        <!--</div>-->
+      <!--</div>-->
+      <!--<div class="function-code">-->
+        <!--<code>colorThief.getPalette(image):{{elapsedTimeForGetPalette}}ms</code>-->
+      <!--</div>-->
+    </div>
+  </script>
+    <script type='text/javascript' src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script type='text/javascript' src="https://d3js.org/d3.v4.js"></script>
+    <script type='text/javascript' src="https://cdn.jsdelivr.net/planck/0.1/planck.js"></script>
+    <!--<script type='text/javascript' src="https://rawgit.com/bgrins/TinyColor/master/tinycolor.js"></script>-->
+    <script type='text/javascript' src="build/d3-bubbletreemap.js"></script>
+    <script src="src/color-thief.js"></script>
+    <script src="src/demo.js"></script>
+    <script src="src/mustache.js"></script>
+    <script src="ColorData.js"></script>
+
+
+
+    <script src="lib/jquery/dist/jquery.js" ></script>
+    <script src="lib/d3v4/d3.v4.js" ></script>
+    <script src="lib/jquery-ui/jquery-ui.js" ></script>
+    <script src="lib/lodash/dist/lodash.js"></script>
+    <script src="lib/bootstrap/dist/js/bootstrap.js" ></script>
+    <!--<script src="lib/d3/d3.min.js" tppabs="http://vis.cse.ust.hk/egoslider/lib/d3/d3.min.js"></script>-->
+    <script src="lib/d3-tip/index.js" ></script>
+    <script src="lib/geom/geom.js" ></script>
+    <script src="lib/angular/angular.js" ></script>
+    <script src="lib/angular-resource/angular-resource.js" ></script>
+    <script src="lib/angular-route/angular-route.js" ></script>
+    <script src="lib/angular-bootstrap/ui-bootstrap-tpls.js" ></script>
+    <script src="lib/angular-ui-date/src/date.js" ></script>
+    <script src="lib/contour-map/conrec.js" ></script>
+
+    <script src="scripts/app.js" ></script>
+    <script src="scripts/filter/util.js"></script>
+    <script src="scripts/services/dataService.js" ></script>
+    <script src="scripts/services/pipService.js" ></script>
+    <script src="scripts/services/egoVisService.js" ></script>
+    <script src="scripts/services/overviewVisService.js" ></script>
+    <script src="scripts/controllers/mainviewCtrl.js" ></script>
+    <script src="scripts/controllers/uiCtrl.js"></script>
+    <script src="scripts/controllers/rightCtrl.js"></script>
+    <script src="scripts/controllers/tableCtrl.js" ></script>
+    <script src="scripts/controllers/dataSelectorCtrl.js"></script>
+    <script src="scripts/controllers/queryFilterCtrl.js" ></script>
+    <script src="scripts/controllers/overviewCtrl.js" ></script>
+    <script src="scripts/directives/tableAttrDirective.js"></script>
+    <script src="scripts/directives/scrollDirective.js" ></script>
+    <script src="scripts/directives/egoDirective.js" ></script>
+    <script src="scripts/directives/tableDirective.js" ></script>
+
+</body>
+</html>
+
+

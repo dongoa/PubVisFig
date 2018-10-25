@@ -1,0 +1,20 @@
+<div id="left-sidebar" style="overflow-y: scroll" ng-controller="rightCtrl">
+    <h4> Control Panel: </h4>
+    <!--<div ng-include src="'views/overview.html'">-->
+    <!--</div>-->
+    <!--<div ng-if="rightSidebar.detailedSelect == 'table'">-->
+    <div ng-include src="'views/queryFilter.html'">
+    </div>
+    <section id="drag-drop" class="drag-drop-section">
+        <div class="container" style="margin:0 auto;max-width:40rem;width:90%">
+            <h2>Input your figure</h2>
+            <div id="drop-zone" class="drop-zone" style="height:15rem;margin-top:4rem;background-color:#222;-webkit-border-radius:8px;-moz-border-radius:8px;-ms-border-radius:8px;-o-border-radius:8px;border-radius:8px">
+                <div class="drop-zone-label default-label">Drag an image here</div>
+                <div class="drop-zone-label dragging-label">Drop it!</div>
+            </div>
+            <div id="dragged-images" class="dragged-images"></div>
+        </div>
+    </section>
+
+
+</div>
