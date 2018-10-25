@@ -209,8 +209,8 @@ vishope.factory('dataService', ['$http', function($http) {
     dataService.setHighlightNode = function(node, highlight) {
         var nodeID = node['id'];
         if (highlight) {
-            console.log("this",this);
-            console.log("this.highlightDict",this.highlightNodeDict);
+            // console.log("this",this);
+            // console.log("this.highlightDict",this.highlightNodeDict);
             this.highlightNodeDict[nodeID] = node;
         } else {
             delete this.highlightNodeDict[nodeID];

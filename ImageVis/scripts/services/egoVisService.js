@@ -29,11 +29,64 @@ vishope.factory('egoVisService', ['$http', 'dataService', 'pipService',
             backgroundColor: '#ffffff',
             secAlterColor: '#555555',
             removed:[],
+            k_search:[],
+            _array_T:new Set([]),
         };
+        console.log('kserach',egoVisService.k_search);
         egoVisService.updataDiv = function(){
 
         }
+        egoVisService.emitSearchEgo = function(msg,$rootScope) {
+            var _origin_str = msg.toLowerCase();
+            console.log(_origin_str);
+                // $rootScope.egoList[0].expansion=true;
 
+
+            console.log("egoservice",msg);
+
+            d3.csv("keywords.csv", function (error, data) {
+                // console.log(typeof data);
+                for(var i in data){
+                    var _key_array_1 = data[i]['Author Keywords']
+
+
+                    if(_key_array_1) {
+                        var key_2 = _key_array_1.replace(/;/g,',');
+                        var _key_arrays = key_2.split(",");
+
+                        for (var j =0;j<_key_arrays.length;j++) {
+                            var _reg = _key_arrays[j].toLowerCase();
+                            // console.log(_reg);
+                            //var reg = RegExp("ReGeX" + _reg + "ReGeX");
+                            if(_reg.match(RegExp(_origin_str))){
+                                console.log(_origin_str,_reg);
+                                //这里要改成包含关系，先这样
+                                egoVisService.k_search.push(data[i]['Paper DOI']);
+                                var _open_TID = 16;
+                                if(data[i]['TID']) {
+                                    _open_TID = parseInt(data[i]['TID'].substring(1,3));
+
+                                }
+                                egoVisService._array_T.add(_open_TID);
+                                // $rootScope.egoList[_open_TID].expansion=true;
+                            }
+                            // console.log(_key_arrays[j]);
+
+                        }
+                    }
+                }
+
+            });
+            for(var _i of egoVisService._array_T)
+            $rootScope.egoList[_i].expansion=true;
+            // $rootScope.$broadcast(SEARCH_EGO, msg);
+            // location.reload();
+            // $scope.shrinkEgoBtn = function(index) {
+                console.log("666",egoVisService.k_search,egoVisService._array_T);
+                // $rootScope.egoList[index]['expansion'] = false;
+            // };
+
+        };
         egoVisService.updataCompare = function(){
 
 
@@ -304,10 +357,10 @@ vishope.factory('egoVisService', ['$http', 'dataService', 'pipService',
                     //drawEgoTimeline(svg, egoData);
                 }
                 // alert(egoData);
-                if(egoData.x==undefined) {
+                // if(egoData.x==undefined) {
                     drawEgoExpansion(svg, egoData);  //egoData.x=1;
-                }
-                else egoData.x=1;
+                // }
+                // else egoData.x=1;
 
             } else {
                 console.log('egoData.synScroll',egoData.synScroll);
@@ -493,6 +546,11 @@ vishope.factory('egoVisService', ['$http', 'dataService', 'pipService',
                     //     console.log("colorload_data",colorload_data[d.data.id]);
                     //     return 'rgb('+domaincolor+')';
                         colorload_data[d.data.id][3]=0.1;
+                        if(egoVisService.k_search.indexOf(d.data.data.paperID.replace('@','/') )!=-1){
+                            console.log("找到");
+                            colorload_data[d.data.id][3]=1;
+                        }
+
                         return "rgba("+colorload_data[d.data.id]+")";
                         // return "red";
                     })

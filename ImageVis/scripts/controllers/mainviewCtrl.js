@@ -1,10 +1,10 @@
 'use strict';
 
-vishope.controller('mainviewCtrl', ['$scope', 'pipService',
-    'dataService', 'egoVisService', function($scope, pipService, dataService, egoVisService) {
+vishope.controller('mainviewCtrl', ['$scope', '$rootScope','pipService',
+    'dataService', 'egoVisService', function($scope, $rootScope,pipService, dataService, egoVisService) {
         console.log("这里是mainviewCtrl.js");
         $scope.screenHeight = screen.height - 130 ;
-        $scope.egoList = [];
+        $rootScope.egoList = [];
         $scope.scrollpos = 0;
         $scope.timelineConfig = {
             startYear: undefined,
@@ -14,7 +14,7 @@ vishope.controller('mainviewCtrl', ['$scope', 'pipService',
         };
         console.log("main-onDatasetChange");
         console.log("piponDatasetChange1");
-        $scope.egoList = [];
+        $rootScope.egoList = [];
         $scope.scrollpos = 0;
         $scope.timelineConfig = {
             startYear: 2005,
@@ -27,23 +27,24 @@ vishope.controller('mainviewCtrl', ['$scope', 'pipService',
         pipService.onDatasetChange($scope, function(msg) {
 
         });
+        // egoVisService.emitSearchEgo($scope,function(msg) {  console.log("there is mainviewCtrl emitSearchEgo"); });
 
         pipService.onHighlightChange($scope, function(node) {
             console.log("onHighlightChange",node);
             console.log("egoID",node['id']);
             var egoID = node['id'];
             if (node.highlight) {
-                $scope.egoList = addEgo(node);
+                $rootScope.egoList = addEgo(node);
             } else {
-                $scope.egoList = removeEgo(node);
+                $rootScope.egoList = removeEgo(node);
             }
-            $scope.egoList.name = "xxxxxxx";
+            $rootScope.egoList.name = "xxxxxxx";
             //setTimelineConfig();
         });
 
         var setTimelineConfig = function() {
             //var highlightNodeDict = dataService.getHighlightNodeDict();
-            var highlightNodeDict = $scope.egoList;
+            var highlightNodeDict = $rootScope.egoList;
             $scope.timelineConfig.startYear = '2005';
             $scope.timelineConfig.endYear = '2016';
             // for (var key in highlightNodeDict) {
@@ -84,30 +85,30 @@ vishope.controller('mainviewCtrl', ['$scope', 'pipService',
         var k=1;
         var addEgo = function(node) {
             var egoID = node['id'];
-            for (var i = 0; i < $scope.egoList.length; i++) {
-                if ($scope.egoList[i]['id'] == egoID) {
-                    return $scope.egoList;
+            for (var i = 0; i < $rootScope.egoList.length; i++) {
+                if ($rootScope.egoList[i]['id'] == egoID) {
+                    return $rootScope.egoList;
                 }
             }
 
             node['id']='T'+k.toString();k=k+1;
-            $scope.egoList.push(node);
-            return $scope.egoList;
+            $rootScope.egoList.push(node);
+            return $rootScope.egoList;
         };
 
         var removeEgo = function(node) {
             var egoID = node['id'];
-            for (var i = 0; i < $scope.egoList.length; i++) {
-                if ($scope.egoList[i]['id'] == egoID) {
-                    $scope.egoList.splice(i, 1);
+            for (var i = 0; i < $rootScope.egoList.length; i++) {
+                if ($rootScope.egoList[i]['id'] == egoID) {
+                    $rootScope.egoList.splice(i, 1);
                     break;
                 }
             }
-            return $scope.egoList;
+            return $rootScope.egoList;
         };
 
         $scope.removeEgoBtn = function(index) {
-            var ego = $scope.egoList[index];
+            var ego = $rootScope.egoList[index];
             dataService.setHighlightNode(ego, false);
             pipService.emitRemoveHighlight(ego);
             pipService.emitHighlightChange(ego);
@@ -115,20 +116,20 @@ vishope.controller('mainviewCtrl', ['$scope', 'pipService',
 
         $scope.expandEgoBtn = function(index) {
             console.log("666");
-            $scope.egoList[index]['expansion'] = true;
+            $rootScope.egoList[index]['expansion'] = true;//change open or close!!
         };
 
         $scope.shrinkEgoBtn = function(index) {
             console.log("666");
-            $scope.egoList[index]['expansion'] = false;
+            $rootScope.egoList[index]['expansion'] = false;
         };
 
         $scope.showPieBtn = function(index) {
-            $scope.egoList[index]['rect'] = false;
+            $rootScope.egoList[index]['rect'] = false;
         };
 
         $scope.showBarBtn = function(index) {
-            $scope.egoList[index]['rect'] = true;
+            $rootScope.egoList[index]['rect'] = true;
         };
 
         // $scope.drawEgoGlyph = function(element, egoData) {
@@ -136,13 +137,13 @@ vishope.controller('mainviewCtrl', ['$scope', 'pipService',
         // };
 
         $scope.clearEgoList = function() {
-            $scope.egoList = [];
+            $rootScope.egoList = [];
         };
 
         pipService.onExpand($scope, function(msg) {
-            for (var i = 0; i < $scope.egoList.length; i++) {
-                if ($scope.egoList[i]['id'] == msg['id']) {
-                    $scope.egoList[i]['expansion'] = true;
+            for (var i = 0; i < $rootScope.egoList.length; i++) {
+                if ($rootScope.egoList[i]['id'] == msg['id']) {
+                    $rootScope.egoList[i]['expansion'] = true;
                     break;
                 }
             }
@@ -153,7 +154,7 @@ vishope.controller('mainviewCtrl', ['$scope', 'pipService',
         });
 
         $scope.changeScroll = function(index) {
-            var ego = $scope.egoList[index];
+            var ego = $rootScope.egoList[index];
             console.log(index,ego,ego.synScroll);
             ego.synScroll = !ego.synScroll;
             if (ego.synScroll) {
@@ -169,12 +170,12 @@ vishope.controller('mainviewCtrl', ['$scope', 'pipService',
         };
 
         $scope.changePerformanceFlag = function(index) {
-            var ego = $scope.egoList[index];
+            var ego = $rootScope.egoList[index];
             ego.performanceFlag = !ego.performanceFlag;
         };
 
          $scope.changeOrderFlag = function(index) {
-             var ego = $scope.egoList[index];
+             var ego = $rootScope.egoList[index];
             ego.orderFlag = !ego.orderFlag;
         };
 
@@ -194,7 +195,7 @@ vishope.controller('mainviewCtrl', ['$scope', 'pipService',
             // console.log("drawEgoExpand",element,egoData,expFlag);
 
 
-            console.log(egoData);
+            // console.log(egoData,element);
             egoVisService.drawEgoExpand(element, egoData, expFlag);
         };
 

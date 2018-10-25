@@ -25,6 +25,7 @@ vishope.factory('pipService', ['$rootScope', function($rootScope) {
     pipService.onDatasetChange = function(scope, callback) {
         console.log("PIPSer:onDatasetChange");
         scope.$on(DATASET_CHANGE, function(event, msg) {
+            console.log("whats on doing here??");
             callback(msg);
         });
     };

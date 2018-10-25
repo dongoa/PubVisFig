@@ -12,6 +12,8 @@ vishope.controller('tableCtrl', ['$scope', 'pipService', 'dataService','egoVisSe
         for (var i = 0; i < 17; i++) {
             // console.log("scope.nodesData[i]",$scope.nodesData[i]);
             $scope.nodesData[i].highlight = !$scope.nodesData[i].highlight;
+            //set highlight
+
             dataService.setHighlightNode($scope.nodesData[i], $scope.nodesData[i].highlight);
             pipService.emitHighlightChange($scope.nodesData[i]);
         }
@@ -55,6 +57,7 @@ vishope.controller('tableCtrl', ['$scope', 'pipService', 'dataService','egoVisSe
             dataService.getNodeSchema().then(function (promise) {
                 initTable(promise.data);
                 var page = $scope.tableConfig.currentPage;
+                console.log("here is page:",page);
                 $scope.currentNodes = getCurrentNodes(page);
 
 

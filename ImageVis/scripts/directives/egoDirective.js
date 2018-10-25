@@ -17,6 +17,7 @@ vishope.directive('egoDirective', ['dataService', function(dataService) {
         link: function(scope, element, attrs) {
             // scope.drawEgoGlyph(element[0], scope.egoData);
             scope.$watch('egoData.synScroll', function() {
+                console.log('egoData.synScroll',scope.egoData);
                 scope.egoData['synOnGoing'] = true;
                 if (scope.egoData.synScroll) {
                     var scrollpos = dataService.getScrollPos(scrollpos);
@@ -28,6 +29,7 @@ vishope.directive('egoDirective', ['dataService', function(dataService) {
                 scope.drawSynScroll(element[0], scope.egoData, scope.egoData.synScroll);
             });
             scope.$watch('egoData.performanceFlag', function() {
+                console.log('egoData.performanceFlag',scope.egoData.performanceFlag);
                 scope.changeColor(element[0], scope.egoData, scope.egoData.performanceFlag);
             });
 
@@ -41,16 +43,19 @@ vishope.directive('egoDirective', ['dataService', function(dataService) {
 
 
             scope.$watch('egoData.expansion', function() {
+                console.log("watch happening",scope.egoData.expansion);
                 scope.drawEgoExpand(element[0], scope.egoData, scope.egoData.expansion);
             });
 
             scope.$watch('egoData.filterNumber', function() {
+                console.log('egoData.filterNumber',scope.egoData.filterNumber);
                 if (scope.egoData.filterNumber) {
                     scope.egoFilterNumber(element[0], scope.egoData, scope.egoData.filterNumber);
                 }
             });
 
             scope.$watch('egoData.orderFlag', function() {
+                console.log('egoData.orderFlag',scope.egoData.orderFlag);
                 scope.reArrangeEgoExpand(element[0], scope.egoData, scope.egoData.orderFlag);
             });
         }
