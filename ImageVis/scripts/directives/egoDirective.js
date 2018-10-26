@@ -44,6 +44,7 @@ vishope.directive('egoDirective', ['dataService', function(dataService) {
 
             scope.$watch('egoData.expansion', function() {
                 console.log("watch happening",scope.egoData.expansion);
+                // console.log(element[0], scope.egoData, scope.egoData.expansion);
                 scope.drawEgoExpand(element[0], scope.egoData, scope.egoData.expansion);
             });
 

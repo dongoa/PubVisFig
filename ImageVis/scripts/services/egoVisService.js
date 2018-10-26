@@ -37,6 +37,8 @@ vishope.factory('egoVisService', ['$http', 'dataService', 'pipService',
 
         }
         egoVisService.emitSearchEgo = function(msg,$rootScope) {
+            egoVisService.k_search=[];
+            egoVisService._array_T.clear();
             var _origin_str = msg.toLowerCase();
             console.log(_origin_str);
                 // $rootScope.egoList[0].expansion=true;
@@ -44,45 +46,70 @@ vishope.factory('egoVisService', ['$http', 'dataService', 'pipService',
 
             console.log("egoservice",msg);
 
-            d3.csv("keywords.csv", function (error, data) {
-                // console.log(typeof data);
-                for(var i in data){
-                    var _key_array_1 = data[i]['Author Keywords']
+            var q = d3.queue();
+            function delayedHello($rootScope,callback) {
+                d3.csv("keywords.csv", function (error, data) {
+                    console.log("csv", $rootScope);
+                    // $rootScope.egoList[0].expansion=true;
+                    // console.log(typeof data);
+                    for(var i in data){
+                        var _key_array_1 = data[i]['Author Keywords']
 
 
-                    if(_key_array_1) {
-                        var key_2 = _key_array_1.replace(/;/g,',');
-                        var _key_arrays = key_2.split(",");
+                        if(_key_array_1) {
+                            var key_2 = _key_array_1.replace(/;/g,',');
+                            var _key_arrays = key_2.split(",");
 
-                        for (var j =0;j<_key_arrays.length;j++) {
-                            var _reg = _key_arrays[j].toLowerCase();
-                            // console.log(_reg);
-                            //var reg = RegExp("ReGeX" + _reg + "ReGeX");
-                            if(_reg.match(RegExp(_origin_str))){
-                                console.log(_origin_str,_reg);
-                                //这里要改成包含关系，先这样
-                                egoVisService.k_search.push(data[i]['Paper DOI']);
-                                var _open_TID = 17;
-                                if(data[i]['TID']) {
-                                    _open_TID = parseInt(data[i]['TID'].substring(1,3));
+                            for (var j =0;j<_key_arrays.length;j++) {
+                                var _reg = _key_arrays[j].toLowerCase();
+                                // console.log(_reg);
+                                //var reg = RegExp("ReGeX" + _reg + "ReGeX");
+                                if(_reg.match(RegExp(_origin_str))){
+                                    console.log(_origin_str,_reg);
+                                    //这里要改成包含关系，先这样
+                                    egoVisService.k_search.push(data[i]['Paper DOI']);
+                                    var _open_TID = 17;
+                                    if(data[i]['TID']) {
+                                        _open_TID = parseInt(data[i]['TID'].substring(1,3));
 
+                                    }
+                                    egoVisService._array_T.add(_open_TID);
+                                    // $rootScope.egoList[_open_TID].expansion=true;
                                 }
-                                egoVisService._array_T.add(_open_TID);
-                                // $rootScope.egoList[_open_TID].expansion=true;
-                            }
-                            // console.log(_key_arrays[j]);
+                                // console.log(_key_arrays[j]);
 
+                            }
                         }
                     }
-                }
 
+                    callback($rootScope);
+                });
+
+            }
+            q.defer(delayedHello,$rootScope);
+
+            q.await(function($rootScope){
+                // console.log(egoVisService._array_T);
+                $rootScope.$apply(function(){
+                    for(var _i of egoVisService._array_T)
+                    $rootScope.egoList[_i-1].expansion=true;
+                    // $rootScope.egoList[0]['expansion']=true;
+
+                });
+
+                // console.log(res);
+                console.log("this is callback");
+
+                // console.log(d3.select('#egoViewT1'));
             });
-            for(var _i of egoVisService._array_T)
-            $rootScope.egoList[_i-1].expansion=true;
+
+
+            // for(var _i of egoVisService._array_T)
+            // $rootScope.egoList[_i-1].expansion=true;
             // $rootScope.$broadcast(SEARCH_EGO, msg);
             // location.reload();
             // $scope.shrinkEgoBtn = function(index) {
-                console.log("666",egoVisService.k_search,egoVisService._array_T);
+            //     console.log("666",egoVisService.k_search,egoVisService._array_T);
                 // $rootScope.egoList[index]['expansion'] = false;
             // };
 
@@ -556,7 +583,14 @@ vishope.factory('egoVisService', ['$http', 'dataService', 'pipService',
                         // return "red";
                     })
                     .style("stroke", "#000000")
-                    .style("stroke-width", "0.15").on('click',function(d){
+                    .style("stroke-width", function(d){
+                        if(egoVisService.k_search.indexOf(d.data.data.paperID.replace('@','/') )!=-1){
+                            console.log("找到");
+                            // colorload_data[d.data.id][3]=1;
+                            return '0.15';
+                        }
+                        return '0';
+                    }).on('click',function(d){
                     var div_image = d3.select('#image-container');
                     var url = './image/'+data[0].imageID.substring(0,4)+'/'+data[0].imageID.substring(4,7)+"/"+d.data.data.paperID+"/"+d.data.id;
                     div_image.append('div').style('width','220px').style('height','220px').style('border','1px solid #C0C0C0').style('background','url('+url+')')
