@@ -36,6 +36,17 @@ vishope.factory('egoVisService', ['$http', 'dataService', 'pipService',
         egoVisService.updataDiv = function(){
 
         }
+        var _keyword_t_percent = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+        var _T_paper_numbers = [244,46,46,117,56,79,11,55,11,30,49,22,24,7,63,112,160];
+        var  _mysum =function(arr) {
+            return eval(arr.join("+"));
+        };
+        var toPercent  = function(point){
+            var str=Number(point*100).toFixed(2);
+            str+="%";
+            return str;
+        }
+
         egoVisService.emitSearchEgo = function(msg,$rootScope) {
             egoVisService.k_search=[];
             egoVisService._array_T.clear();
@@ -52,10 +63,15 @@ vishope.factory('egoVisService', ['$http', 'dataService', 'pipService',
                     console.log("csv", $rootScope);
                     // $rootScope.egoList[0].expansion=true;
                     // console.log(typeof data);
+
                     for(var i in data){
                         var _key_array_1 = data[i]['Author Keywords']
 
-
+                        // var _open_TID_0 = 17;
+                        // if(data[i]['TID']){
+                        //     _open_TID_0 = parseInt(data[i]['TID'].substring(1,3));
+                        // }
+                        // _T_paper_numbers[_open_TID_0-1]+=1;
                         if(_key_array_1) {
                             var key_2 = _key_array_1.replace(/;/g,',');
                             var _key_arrays = key_2.split(",");
@@ -71,7 +87,8 @@ vishope.factory('egoVisService', ['$http', 'dataService', 'pipService',
                                     var _open_TID = 17;
                                     if(data[i]['TID']) {
                                         _open_TID = parseInt(data[i]['TID'].substring(1,3));
-
+                                        console.log("T-----------",_keyword_t_percent[_open_TID-1],typeof _keyword_t_percent[_open_TID-1]);
+                                        _keyword_t_percent[_open_TID-1]=_keyword_t_percent[_open_TID-1]+1;
                                     }
                                     egoVisService._array_T.add(_open_TID);
                                     // $rootScope.egoList[_open_TID].expansion=true;
@@ -89,16 +106,37 @@ vishope.factory('egoVisService', ['$http', 'dataService', 'pipService',
             q.defer(delayedHello,$rootScope);
 
             q.await(function($rootScope){
+                var _Sum = _mysum(_keyword_t_percent);
+                console.log(_Sum);
+                var _max = -1;
+                var _open_k_T=-1;
+                for(var _i=0;_i<17;_i++){
+                    if( _keyword_t_percent[_i] > _max) {_max =  _keyword_t_percent[_i]; _open_k_T = _i;}
+                    _keyword_t_percent[_i] = _keyword_t_percent[_i] / _Sum;
+                    if(_i<9)
+                    $(".T0"+(_i+1)+"-probility").html(  toPercent(_keyword_t_percent[_i]) );
+                    else $(".T"+(_i+1)+"-probility").html(  toPercent(_keyword_t_percent[_i]) );
+                }
+                // console.log("T_numbers_compute_",_keyword_t_percent);
+                // console.log("T_numbers_compute_",_T_paper_numbers);
                 // console.log(egoVisService._array_T);
                 $rootScope.$apply(function(){
-                    for(var _i of egoVisService._array_T)
-                    $rootScope.egoList[_i-1].expansion=true;
+                    console.log("open is :", _open_k_T);
+                    if(_open_k_T != -1 )   $rootScope.egoList[_open_k_T].expansion=true;
+
+                    // for(var _i of egoVisService._array_T)
+                    // $rootScope.egoList[_i-1].expansion=true;
                     // $rootScope.egoList[0]['expansion']=true;
 
                 });
 
-                // console.log(res);
-                console.log("this is callback");
+                // for(var _i =0;_i<17;_i++){
+                //
+                // }
+
+                // console.log("_keyword_t_percent",_T_paper_numbers);
+                // // console.log(res);
+                // console.log("this is callback");
 
                 // console.log(d3.select('#egoViewT1'));
             });
@@ -291,7 +329,11 @@ vishope.factory('egoVisService', ['$http', 'dataService', 'pipService',
                     .attr('visibility', 'hidden');
             }
         };
+        var _my_tip = d3.tip()
 
+            .attr('class', 'd3-tip')
+            .offset([-10, 0])
+           ;
         var changeEgoExpansionColor = function (element, egoData, performanceFlag) {
             var wrapper = d3.select(element).select('.egoExpansionWrapper');
             if (performanceFlag) {
@@ -377,6 +419,8 @@ vishope.factory('egoVisService', ['$http', 'dataService', 'pipService',
                 .attr('height', 0)
                 .style('background', egoVisService.backgroundColor);
             var svg = d3.select(element).select('.egoGlyphCanvas');
+            // svg.tagName = 'svg';
+            svg.call(_my_tip);
             if (expFlag) {
                 svg.attr('height', egoVisService.maxCanvasSize);
                 var egoTimeline = svg.selectAll('.egoTimeline');
@@ -403,9 +447,12 @@ vishope.factory('egoVisService', ['$http', 'dataService', 'pipService',
         };
 
         egoVisService.drawSynScroll = function (element, egoData, synFlag) {
+
             if (egoData.expansion)
                 return;
             var svg = d3.select(element).select('.egoGlyphCanvas');
+
+            // console.log("TTTTTTTTTTTTTTTTTTT",);
             if (synFlag) {
                 svg.attr('height', 50);
                 svg.select('.egoTimeline').data([]).exit().remove();
@@ -415,7 +462,7 @@ vishope.factory('egoVisService', ['$http', 'dataService', 'pipService',
             }
         };
 
-        var drawEgoExpansion = function (svg, egoData) {
+        var drawEgoExpansion =  function (svg, egoData) {
 
             // console.log("===============================================egoData",egoData);
             // var timelineConfig = egoVisService.timelineConfig ;
@@ -431,11 +478,38 @@ vishope.factory('egoVisService', ['$http', 'dataService', 'pipService',
                 else _Tnum='T0'+egoData['id'][1];
                 var _src='scripts\\services\\data_T_csv\\'+k.toString()+_Tnum+".csv";
                 // console.log("src:",_src);
-                d3.csv(_src, function (error, data) {
-                   if(data!=undefined){
-                        // console.log("data:",data);
-                        drawChart(data, svg,padding,100,110);
-                    }
+
+
+                // const pretrainedModelURL = 'https://storage.googleapis.com/tfjs-models/tfjs/mobilenet_v1_0.25_224/model.json';
+                //
+                // tf.loadModel(pretrainedModelURL).then(model => {
+                //     const layer = model.getLayer('conv_pw_13_relu');
+                //     return tf.model({
+                //         inputs: [model.inputs[0]],
+                //         outputs: layer.output,
+                //     });
+                // }).then(pretrainedModel => {
+                //     return tf.loadModel('./data/deeplearningmodel/ml-classifier-T01-T02-T03-T04-T05-T06-T07-T08-T09-T10-T11-T12-T13-T14-T15-T16.json').then(model => {
+                //         model.summary();
+
+
+
+                                          d3.csv(_src, function (error, data) {
+                                   if(data!=undefined){
+                                        // console.log("data:",data);
+
+
+
+
+                                        drawChart(data, svg,padding,100,110);
+                                    }
+
+                    //     });
+                    // }).catch(err => {
+                    //     console.error('Error', err);
+                    // });
+
+
 
                 });
             }
@@ -448,11 +522,15 @@ vishope.factory('egoVisService', ['$http', 'dataService', 'pipService',
                 var p_x = parseInt(data[0].imageID);
                 // console.log("year:",p_x);
                 //scale
-
+                // var svvg = svg.append("g").attr("class","egoExpansionWrapper");
+                // svvg.call(tip);
+                // d3.select(".egoGlyphCanvas").call(tip);
                 var svg=svg.append("g").attr("class","egoExpansionWrapper").attr("transform","translate("+(200*(p_x-2006)-100+30)+","+yy+")");
+
+
                 // console.log(svg.select('.egoExpansionWrapper'));
                 // console.log("padding",padding);
-                var scalearea=d3.scaleLinear().range([0,9]).domain(d3.extent(data, function(d) { return d.size; })).nice();
+                var scalearea=d3.scaleLinear().range([0,9.5]).domain(d3.extent(data, function(d) { return d.size; })).nice();
 
                 // Create hierarchy.
                 var root1 = d3.stratify()
@@ -484,6 +562,7 @@ vishope.factory('egoVisService', ['$http', 'dataService', 'pipService',
                 let leafNodes = hierarchyRoot.descendants().filter(function (candidate) {
                     return !candidate.children;
                 });
+
                 svg.on("click",function(){
                         var select = data[0].imageID.substring(0,4)+','+data[0].imageID.substring(4,7);
                         console.log(egoVisService.selection.length);
@@ -549,6 +628,18 @@ vishope.factory('egoVisService', ['$http', 'dataService', 'pipService',
                 let circleGroup = svg.append("g")
                     .attr("class", "circlesAfterPlanck");
 
+
+
+                _my_tip.html(function(d) {
+                    console.log(d);
+                    var _length = d.data.id.length;
+                    console.log(_length);
+                    var url = './image/'+d.data.data.paperID.substring(13,17)+'/'+d.data.id.substring(_length-7,_length-4)+"/"+d.data.data.paperID+"/"+d.data.id;
+                    var  string = "<img  src=  " +url +" width='200px' />";
+
+                    return string+"</br><strong>figureID:</strong> <span style='color:red'>" + d.data.id+ "</span>";
+                });
+
                 circleGroup.selectAll("circle")
                     .data(leafNodes)
                     .enter().append("circle")
@@ -559,10 +650,131 @@ vishope.factory('egoVisService', ['$http', 'dataService', 'pipService',
                         return d.r; })
                     .attr("cx", function(d) { return d.x; })
                     .attr("cy", function(d) { return d.y; })
+                    .attr("x", function(d) { return d.x; })
+                    .attr("y", function(d) { return d.y; })
                     .style("fill", function(d) { //return d.color;
                     //
-                    //     var image = new Image();
-                    //     image.src='image\\'+data[0].imageID.substring(0,4)+'/'+data[0].imageID.substring(4,7)+"/"+d.data.data.paperID+"/"+d.data.id;
+                    //     var image1 = new Image();
+                    //     image1.src='image\\'+data[0].imageID.substring(0,4)+'/'+data[0].imageID.substring(4,7)+"/"+d.data.data.paperID+"/"+d.data.id;
+                    //     console.log(image1.src);
+
+
+
+                        // if(d.data.data.paperID == '10.1109@VAST.2011.6102461'||d.data.data.paperID == '10.1109@VAST.2011.6102462'
+                        //     ||d.data.data.paperID == '10.1109@VAST.2011.6102458'||d.data.data.paperID == '10.1109@VAST.2011.6102460') {
+
+
+                            // loadImage(image1.src).then(loadedImage => {
+                            //     // console.log("1111111111111111");
+                            //     console.log(loadedImage);
+                            //     // var tmp = tf.fromPixels(loadedImage);
+                            //     // console.log("1111111111111111");
+                            //     const image = loadAndProcessImage(loadedImage, pretrainedModel);
+                            //     // const image2 = tf.reshape(tmp, [1,224,224,3]);
+                            //     // console.log("1111111111111111");
+                            //     const pretrainedModelPrediction = pretrainedModel.predict(image);
+                            //     // console.log("1111111111111111");
+                            //     const modelPrediction = model.predict(pretrainedModelPrediction);
+                            //     // console.log("1111111111111111");
+                            //     const values = modelPrediction.dataSync();
+                            //     // const prediction = modelPrediction.dataSync();
+                            //     const show_T = modelPrediction.as1D().argMax().dataSync()[0];
+                            //     if (_pro_T17[d.data.data.paperID]) {
+                            //         for (var _k in _pro_T17[d.data.data.paperID]) {
+                            //             // console.log(_k);
+                            //             _pro_T17[d.data.data.paperID][_k] = _pro_T17[d.data.data.paperID][_k] + values[_k];
+                            //         }
+                            //         // for(var _k=0;_k<16;_k++){
+                            //         //     _pro_T17[d.data.data.paperID][_k] = _pro_T17[d.data.data.paperID][_k] + values[_k];
+                            //         // }
+                            //     }
+                            //     // _pro_T17[d.data.data.paperID]=values+_pro_T17[d.data.data.paperID];
+                            //     else _pro_T17[d.data.data.paperID] = values;
+                            //     // _open_T = show_T;
+                            //     // $("#virtual-button").click();
+                            //
+                            //     // console.log("查看模拟按键", $("#virtual-button"));
+                            //
+                            //     console.log("show_T", _pro_T17);
+                                // console.log('=================================',modelPrediction.as1D());
+
+                                // var colorThiefOutput = {
+                                //     prediction_out1: toPercent(values[0]),
+                                //     prediction_out2: toPercent(values[1]),
+                                //     color: color,
+                                //     palette: palette,
+                                //     elapsedTimeForGetColor: elapsedTimeForGetColor,
+                                //     elapsedTimeForGetPalette: elapsedTimeForGetPalette
+                                // };
+                                // console
+                                // var colorThiefOuputHTML = Mustache.to_html($('#color-thief-output-template').html(), colorThiefOutput);
+
+                                //table input
+                                // $(".T01-probility").html(colorThiefOutput.prediction_out1);
+                                // $(".T02-probility").html(colorThiefOutput.prediction_out2);
+                                // $(".T03-probility").html(toPercent(values[2]));
+                                // $(".T04-probility").html(toPercent(values[3]));
+                                // $(".T05-probility").html(toPercent(values[4]));
+                                // $(".T06-probility").html(toPercent(values[5]));
+                                // $(".T07-probility").html(toPercent(values[6]));
+                                // $(".T08-probility").html(toPercent(values[7]));
+                                // $(".T09-probility").html(toPercent(values[8]));
+                                // $(".T10-probility").html(toPercent(values[9]));
+                                // $(".T11-probility").html(toPercent(values[10]));
+                                // $(".T12-probility").html(toPercent(values[11]));
+                                // $(".T13-probility").html(toPercent(values[12]));
+                                // $(".T14-probility").html(toPercent(values[13]));
+                                // $(".T15-probility").html(toPercent(values[14]));
+                                // $(".T16-probility").html(toPercent(values[15]));
+                                // $(".T03-probility").html(toPercent(values[8]));
+
+                                // console.log(t1,typeof t1);
+
+                                // $imageSection.addClass('with-color-thief-output');
+                                // $imageSection.find('.run-functions-button');//.addClass('hide');
+                                //
+                                // setTimeout(function(){
+                                //     // $imageSection.find('.color-thief-output').css("transform","translate(80px,-50px)");
+                                //     $imageSection.find('.color-thief-output').append(colorThiefOuputHTML).slideToggle();
+                                //     // If the color-thief-output div is not in the viewport or cut off, scroll down.
+                                //     var windowHeight          = $(window).height();
+                                //     var currentScrollPosition = $('body').scrollTop()
+                                //     var outputOffsetTop       = $imageSection.find('.color-thief-output').offset().top
+                                //     if ((currentScrollPosition < outputOffsetTop) && (currentScrollPosition + windowHeight - 250 < outputOffsetTop)) {
+                                //         $('body').animate({scrollTop: outputOffsetTop - windowHeight + 200 + "px"});
+                                //     }
+                                // }, 300);
+
+                                // console.log(prediction);
+                            //     return _pro_T17;
+                            // }).then(_pro_T17 => {
+                            //     //                  var _pro_T17_l = _pro_T17.length;
+                            //     // console.log(_pro_T17_l);
+                            //     var T17_2_T = {};
+                            //     for (var _p in _pro_T17) {
+                            //         var _max_T17 = -1;
+                            //         var _max_id = 0;
+                            //         for (var _q = 0; _q < 16; _q++) {
+                            //             if (_pro_T17[_p][_q] > _max_T17) {
+                            //                 _max_T17 = _pro_T17[_p][_q];
+                            //                 _max_id = _q;
+                            //             }
+                            //         }
+                            //         T17_2_T[_p] = _max_id;
+                            //
+                            //         //     _pro_T17[_p]=_max_id;
+                            //         //     console.log(_p,_pro_T17[_p]);
+                            //         //
+                            //     }
+                            //     console.log("result", T17_2_T);
+                            //     // console.log("_pro_T17",_pro_T17);
+                            // })
+
+                        // }
+
+
+
+
                     //     image.onload=function(){ console.log("加载完成"); }
                     //     //console.log(image.src);
                     //     var colorThief = new ColorThief();
@@ -572,7 +784,7 @@ vishope.factory('egoVisService', ['$http', 'dataService', 'pipService',
                     //     console.log(domaincolor);
                     //     console.log("colorload_data",colorload_data[d.data.id]);
                     //     return 'rgb('+domaincolor+')';
-                        colorload_data[d.data.id][3]=0;
+                        colorload_data[d.data.id][3]=0.5;
                         // console.log(egoVisService.k_search,d.data.data.paperID.replace('@','/'));
                         if(egoVisService.k_search.indexOf(d.data.data.paperID.replace('@','/') )!=-1){
                             console.log("找到");
@@ -582,20 +794,27 @@ vishope.factory('egoVisService', ['$http', 'dataService', 'pipService',
                         return "rgba("+colorload_data[d.data.id]+")";
                         // return "red";
                     })
-                    .style("stroke", "#000000")
+                    .style("stroke", "#000000").on('mouseover', function(d){ _my_tip.show(d,this); })
+                    .on('mouseout', _my_tip.hide)
                     .style("stroke-width", function(d){
                         if(egoVisService.k_search.indexOf(d.data.data.paperID.replace('@','/') )!=-1){
                             console.log("找到");
                             // colorload_data[d.data.id][3]=1;
-                            return '0.15';
+                            return '0.1';
                         }
-                        return '0';
+                        // return '0.08';
+                        return 0.6;
                     }).on('click',function(d){
                     var div_image = d3.select('#image-container');
                     var url = './image/'+data[0].imageID.substring(0,4)+'/'+data[0].imageID.substring(4,7)+"/"+d.data.data.paperID+"/"+d.data.id;
                     div_image.append('div').style('width','220px').style('height','220px').style('border','1px solid #C0C0C0').style('background','url('+url+')')
                         .style('background-size','100% 100%').style('float','left');
-                });
+                }) ;
+                // console.log(_pro_T17);
+                // var file = new File([JSON.stringify(_pro_T17)], "colordata.txt", { type: "text/plain;charset=utf-8" });
+                // saveAs(file);
+                // console.log('save done!!!!!!!!!!!!!');
+
 
                 // Draw labels.
                 /*let textGroup = svg.append("g")
@@ -3513,5 +3732,59 @@ vishope.factory('egoVisService', ['$http', 'dataService', 'pipService',
             }
             return curTieStrDict;
         };
+
+        function loadImage(src) {
+            // console.log(src);
+            return new Promise((resolve, reject) => {
+                const img = new Image();
+                img.src = src;
+                img.onload = () => resolve(tf.fromPixels(img));
+                img.onerror = (err) => reject(err);
+            });
+        }
+        function cropImage(img) {
+            // if(img.shape[0]%2)img.shape[0]=img.shape[0]-1;
+            // if(img.shape[1]%2)img.shape[1]=img.shape[1]-1;
+            const width = img.shape[0];
+            const height = img.shape[1];
+            // if(width%2) width=width-1;
+            // if(height%2) height=height-1;
+            // img.shape[0] = width;
+            // img.width=width;
+            //
+            // img.shape[1] = height;
+            // img.height=height;
+            // use the shorter side as the size to which we will crop
+            const shorterSide = Math.min(img.shape[0], img.shape[1]);
+
+            // calculate beginning and ending crop points
+            const startingHeight = (height - shorterSide) / 2;
+            // if(startingHeight%2) startingHeight= startingHeight-1;
+            const startingWidth = (width - shorterSide) / 2;
+            // if(startingWidth%2) startingWidth= startingWidth-1;
+            const endingHeight = startingHeight + shorterSide;
+            // if(endingHeight%2) endingHeight= endingHeight-1;
+            const endingWidth = startingWidth + shorterSide;
+            // if(endingWidth%2) endingWidth= endingWidth-1;
+
+            // return image data cropped to those points
+            return img.slice([parseInt(startingWidth), parseInt(startingHeight), 0], [parseInt(endingWidth), parseInt(endingHeight), 3]);
+        }
+        function batchImage(image) {
+            // Expand our tensor to have an additional dimension, whose size is 1
+            const batchedImage = image.expandDims(0);
+
+            // Turn pixel data into a float between -1 and 1.
+            return batchedImage.toFloat().div(tf.scalar(127)).sub(tf.scalar(1));
+        }
+        function resizeImage(image) {
+            return tf.image.resizeBilinear(image, [224, 224]);
+        }
+        function loadAndProcessImage(image) {
+            const croppedImage = cropImage(image);
+            const resizedImage = resizeImage(croppedImage);
+            const batchedImage = batchImage(resizedImage);
+            return batchedImage;
+        }
         return egoVisService;
     }]);

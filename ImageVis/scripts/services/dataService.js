@@ -24,7 +24,124 @@ vishope.factory('dataService', ['$http', function($http) {
     //     return $http.get(getDBListURL);
     // };
 
+    // const dog = '/dataset-tutorial-for-image-classification-master/ML-class-data/dog1.jpg';
+    // async function loadMobilenet() {
+    //     const M =  tf.loadModel('https://storage.googleapis.com/tfjs-models/tfjs/mobilenet_v1_0.25_224/model.json');
+    //     // const saveResult = await M.save('localstorage://my-model-1');
+    //     return M;
+    // }
+     var loadImage  = function(src) {
+
+        var DIV = document.getElementById('image-vis');
+        DIV.style.background='url('+ src+')';
+        console.log(DIV);
+        console.log('src',src);
+        return new Promise((resolve, reject) => {
+            const img = new Image();
+            img.src = src;
+            console.log('width and height',img.width,img.height);
+            img.onload = () => resolve(tf.fromPixels(img));
+            img.onerror = (err) => reject(err);
+        });
+    }
+    var cropImage= function(img) {
+        var width = img.shape[0];
+        var height = img.shape[1];
+        if(width%2) width=width-1;
+        if(height%2) height=height-1;
+        img.shape[0] = width;
+        img.shape[1] = height;
+        console.log('crop-w-h',width,height);
+        // use the shorter side as the size to which we will crop
+        const shorterSide = Math.min(img.shape[0], img.shape[1]);
+
+        // calculate beginning and ending crop points
+        const startingHeight = (height - shorterSide) / 2;
+        const startingWidth = (width - shorterSide) / 2;
+        const endingHeight = startingHeight + shorterSide;
+        const endingWidth = startingWidth + shorterSide;
+
+        // return image data cropped to those points
+        return img.slice([startingWidth, startingHeight, 0], [endingWidth, endingHeight, 3]);
+    }
+    var  resizeImage = function(image) {
+        return tf.image.resizeBilinear(image, [224, 224]);
+    }
+    var  batchImage = function(image) {
+        // Expand our tensor to have an additional dimension, whose size is 1
+        const batchedImage = image.expandDims(0);
+
+        // Turn pixel data into a float between -1 and 1.
+        return batchedImage.toFloat().div(tf.scalar(127)).sub(tf.scalar(1));
+    }
+    var  loadAndProcessImage = function(image) {
+        const croppedImage = cropImage(image);
+        const resizedImage = resizeImage(croppedImage);
+        const batchedImage = batchImage(resizedImage);
+        return batchedImage;
+    }
+    var  loadMobilenet = function() {
+        const M =  tf.loadModel('https://storage.googleapis.com/tfjs-models/tfjs/mobilenet_v1_0.25_224/model.json');
+        // const saveResult = await M.save('localstorage://my-model-1');
+        return M;
+    }
+    // async function saveMymodel(){
+    //
+    //     await model.save('localstorage://my-model-1');
+    // }
+    async function loadfileModle(){
+        const path = './ml-classifier-blue-red.json';
+        const model = await tf.loadModel(path);
+        model.summary();
+    }
+
+
     dataService.updateDataset = function() {
+
+        // loadfileModle();
+        // loadMobilenet().then(pretrainedModel => {
+        //     console.log('here begin!');
+        //
+        // });
+
+
+
+        // $http.get(serverURL + '/model.json')
+        //     .success(function(data) {
+        //         console.log('================');
+        //         loadMobilenet().then( (pretrainedModel) => {
+        //             console.log('next load image');
+        //             loadImage('/dataset-tutorial-for-image-classification-master/dog1.jpg').then(img => {
+        //                 console.log("################",img);
+        //                 const processedImage = loadAndProcessImage(img);
+        //                 const prediction = pretrainedModel.predict(processedImage);
+        //                 console.log("predicting...");
+        //                 // Because of the way Tensorflow.js works, you must call print on a Tensor instead of console.log.
+        //                 prediction.print();
+        //                 prediction.as1D().argMax().print();
+        //
+        //                 const labelPrediction = prediction.as1D().argMax().dataSync()[0];
+        //                 //               console.log(`
+        //                 //   Numeric prediction is ${labelPrediction}
+        //                 //   The predicted label is ${labels[labelPrediction]}
+        //                 //   The actual label is drum, membranophone, tympan
+        //                 // `);
+        //             });
+        //         });
+        //         // var maxTuple = calMax(data);
+        //         // _this.maxStrDict = genMaxStrDict(data);
+        //         // _this.maxAlter = maxTuple[0];
+        //         // _this.maxSecondAlter = maxTuple[1];
+        //         // _this.maxTieStr = maxTuple[2];
+        //         // _this.selectedDataset = selectedDataset;
+        //         _this.NodeObjList = data;
+        //         _this.highlightNodeDict = {};
+        //     });
+
+
+        // tf.loadModel('localstorage:/'+serverURL + '/model.json');
+
+
         var _this = this;
         // this.NodeObjList = undefined;
         // this.highlightNodeDict = {};

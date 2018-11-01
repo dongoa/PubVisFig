@@ -65,6 +65,7 @@
         <!--</div>-->
     </div>
     <!--<script src="d3-hierarchy-master\src\stratify.js"></script>-->
+
     <script id='image-section-template' type='text/x-mustache'>
     {{#images}}
     <div class="image-section {{class}}">
@@ -81,29 +82,35 @@
   </script>
 
     <script id="color-thief-output-template" type="text/x-mustache">
-    <div class="function get-color">
-      <h5 class="function-title">Dominant Color</h5>
-      <div class="swatches">
-        <div class="swatch" style="background-color: rgb({{color.0}}, {{color.1}}, {{color.2}})"></div>
-      </div>
-      <!--<div class="function-code">-->
-        <!--<code>colorThief.getColor(image):{{elapsedTimeForGetColor}}ms</code>-->
+    <!--<div class="function get-color">-->
+
+      <!--<h5 class="function-title">T1:{{prediction_out1}}      T2:{{prediction_out2}}</h5>-->
+      <!--&lt;!&ndash;<h5 class="function-title"></h5>&ndash;&gt;-->
+      <!--&lt;!&ndash;<h5 class="function-title">Dominant Color</h5>&ndash;&gt;-->
+      <!--<div class="swatches">-->
+        <!--&lt;!&ndash;<div class="swatch" style="background-color: rgb({{color.0}}, {{color.1}}, {{color.2}})"></div>&ndash;&gt;-->
       <!--</div>-->
-    </div>
-    <!--<div class="function get-palette">-->
-      <!--<h3 class="function-title">Palette</h3>-->
-      <!--<div class="function-output">-->
-        <!--<div class="swatches">-->
-          <!--{{#palette}}-->
-            <!--<div class="swatch" style="background-color: rgb({{0}}, {{1}}, {{2}})"></div>-->
-          <!--{{/palette}}-->
-        <!--</div>-->
-      <!--</div>-->
-      <!--<div class="function-code">-->
-        <!--<code>colorThief.getPalette(image):{{elapsedTimeForGetPalette}}ms</code>-->
-      <!--</div>-->
-    </div>
+      <!--&lt;!&ndash;<div class="function-code">&ndash;&gt;-->
+        <!--&lt;!&ndash;<code>colorThief.getColor(image):{{elapsedTimeForGetColor}}ms</code>&ndash;&gt;-->
+      <!--&lt;!&ndash;</div>&ndash;&gt;-->
+    <!--</div>-->
+    <!--&lt;!&ndash;<div class="function get-palette">&ndash;&gt;-->
+      <!--&lt;!&ndash;<h3 class="function-title">Palette</h3>&ndash;&gt;-->
+      <!--&lt;!&ndash;<div class="function-output">&ndash;&gt;-->
+        <!--&lt;!&ndash;<div class="swatches">&ndash;&gt;-->
+          <!--&lt;!&ndash;{{#palette}}&ndash;&gt;-->
+            <!--&lt;!&ndash;<div class="swatch" style="background-color: rgb({{0}}, {{1}}, {{2}})"></div>&ndash;&gt;-->
+          <!--&lt;!&ndash;{{/palette}}&ndash;&gt;-->
+        <!--&lt;!&ndash;</div>&ndash;&gt;-->
+      <!--&lt;!&ndash;</div>&ndash;&gt;-->
+      <!--&lt;!&ndash;<div class="function-code">&ndash;&gt;-->
+        <!--&lt;!&ndash;<code>colorThief.getPalette(image):{{elapsedTimeForGetPalette}}ms</code>&ndash;&gt;-->
+      <!--&lt;!&ndash;</div>&ndash;&gt;-->
+    <!--</div>-->
+      <!--<script src="./index.js"></script>-->
   </script>
+
+
     <script type='text/javascript' src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
     <script type='text/javascript' src="https://d3js.org/d3.v4.js"></script>
     <script type='text/javascript' src="https://cdn.jsdelivr.net/planck/0.1/planck.js"></script>
@@ -111,11 +118,12 @@
     <script type='text/javascript' src="build/d3-bubbletreemap.js"></script>
     <script src="src/color-thief.js"></script>
     <script src="src/demo.js"></script>
+    <script src="src/FileSaver.js"></script>
     <script src="src/mustache.js"></script>
     <script src="ColorData.js"></script>
 
-
-
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@0.13.3/dist/tf.min.js"> </script>
+    <!--<script src="./index.js"></script>-->
     <script src="lib/jquery/dist/jquery.js" ></script>
     <script src="lib/d3v4/d3.v4.js" ></script>
     <script src="lib/jquery-ui/jquery-ui.js" ></script>
@@ -123,6 +131,7 @@
     <script src="lib/bootstrap/dist/js/bootstrap.js" ></script>
     <!--<script src="lib/d3/d3.min.js" tppabs="http://vis.cse.ust.hk/egoslider/lib/d3/d3.min.js"></script>-->
     <script src="lib/d3-tip/index.js" ></script>
+    <!--<script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>-->
     <script src="lib/geom/geom.js" ></script>
     <script src="lib/angular/angular.js" ></script>
     <script src="lib/angular-resource/angular-resource.js" ></script>
@@ -148,7 +157,7 @@
     <script src="scripts/directives/scrollDirective.js" ></script>
     <script src="scripts/directives/egoDirective.js" ></script>
     <script src="scripts/directives/tableDirective.js" ></script>
-
+    <script>  _open_T = -1; _pro_T17={};</script>
 </body>
 </html>
 

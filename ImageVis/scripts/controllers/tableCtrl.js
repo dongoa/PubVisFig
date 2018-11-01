@@ -9,7 +9,7 @@ vishope.controller('tableCtrl', ['$scope', 'pipService', 'dataService','egoVisSe
         $scope.highlightNodeDict = dataService.getHighlightNodeDict();
 
 
-        for (var i = 0; i < 17; i++) {
+        for (var i = 0; i < 16; i++) {
             // console.log("scope.nodesData[i]",$scope.nodesData[i]);
             $scope.nodesData[i].highlight = !$scope.nodesData[i].highlight;
             //set highlight

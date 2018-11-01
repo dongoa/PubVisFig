@@ -1,20 +1,61 @@
 <div id="left-sidebar" style="overflow-y: scroll" ng-controller="rightCtrl">
-    <h4> Control Panel: </h4>
+    <h3> Control Panel</h3>
     <!--<div ng-include src="'views/overview.html'">-->
     <!--</div>-->
     <!--<div ng-if="rightSidebar.detailedSelect == 'table'">-->
     <div ng-include src="'views/queryFilter.html'">
     </div>
+    <div class="info-header">
+        <h5>Search by images:</h5>
+    </div>
     <section id="drag-drop" class="drag-drop-section">
-        <div class="container" style="margin:0 auto;max-width:40rem;width:90%">
-            <h2>Input your figure</h2>
-            <div id="drop-zone" class="drop-zone" style="height:15rem;margin-top:4rem;background-color:#222;-webkit-border-radius:8px;-moz-border-radius:8px;-ms-border-radius:8px;-o-border-radius:8px;border-radius:8px">
-                <div class="drop-zone-label default-label">Drag an image here</div>
+        <div class="container" style="margin:0 auto;max-width:40rem;width:80%">
+
+            <div id="drop-zone" class="drop-zone" style="height:10rem;margin-top:0rem;background-color:#222;-webkit-border-radius:8px;-moz-border-radius:8px;-ms-border-radius:8px;-o-border-radius:8px;border-radius:8px">
+                <div class="drop-zone-label default-label" style="font-size: 60px; transform:translate(00px,-30px)">+</div>
                 <div class="drop-zone-label dragging-label">Drop it!</div>
             </div>
-            <div id="dragged-images" class="dragged-images"></div>
+
         </div>
+        <div id="dragged-images" class="dragged-images" style="margin:0 auto;max-width:40rem;width:73%;"></div>
+        <div class="info-header" >
+            <h5 style="transform:translate(0px,0px);    text-align: left;">Result:</h5>
+        </div>
+
     </section>
 
 
+    <table border="1" style="text-align:center;margin:0 auto;max-width:40rem;width:73%">
+        <tr>
+            <th>Topic Class</th>
+            <th>Probability</th>
+        </tr>
+        <tr><td>T01</td><td  class = "T01-probility"></td></tr>
+        <tr><td>T02</td><td  class = "T02-probility"></td></tr>
+        <tr><td>T03</td><td  class = "T03-probility"></td></tr>
+        <tr><td>T04</td><td  class = "T04-probility"></td></tr>
+        <tr><td>T05</td><td  class = "T05-probility"></td></tr>
+        <tr><td>T06</td><td  class = "T06-probility"></td></tr>
+        <tr><td>T07</td><td  class = "T07-probility"></td></tr>
+        <tr><td>T08</td><td  class = "T08-probility"></td></tr>
+        <tr><td>T09</td><td  class = "T09-probility"></td></tr>
+        <tr><td>T10</td><td  class = "T10-probility"></td></tr>
+        <tr><td>T11</td><td  class = "T11-probility"></td></tr>
+        <tr><td>T12</td><td  class = "T12-probility"></td></tr>
+        <tr><td>T13</td><td  class = "T13-probility"></td></tr>
+        <tr><td>T14</td><td  class = "T14-probility"></td></tr>
+        <tr><td>T15</td><td  class = "T15-probility"></td></tr>
+        <tr><td>T16</td><td  class = "T16-probility"></td></tr>
+    </table>
+
+
+    <!--<div ng-include src="'index.html'">-->
+
+    <!--</div>-->
+    <!--<h5>training data:</h5>-->
+    <!--<div id="image-vis1" style="width:90%;height:100px;border:2px solid #cccccc; background: url(./data/colors/training/blue/blue-1.png); background-size:100% 100%;"></div>-->
+    <!--<div id="image-vis2" style="width:90%;height:100px;border:2px solid #cccccc; background: url(./data/colors/training/blue/blue-2.png); background-size:100% 100%;"></div>-->
+    <!--<div id="image-vis3" style="width:90%;height:100px;border:2px solid #cccccc; background: url(./data/colors/training/red/red-1.png); background-size:100% 100%;"></div>-->
+    <!--<div id="image-vis4" style="width:90%;height:100px;border:2px solid #cccccc; background: url(./data/colors/training/red/red-2.png); background-size:100% 100%;"></div>-->
+    <!--<div id="image-vis5" style="width:200px;height:100px;border:2px solid red; background: url(./data/colors/training/graph/graph-3.jpg); background-size:100% 100%;"></div>-->
 </div>
