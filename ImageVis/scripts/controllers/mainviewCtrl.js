@@ -91,7 +91,8 @@ vishope.controller('mainviewCtrl', ['$scope', '$rootScope','pipService',
                 }
             }
 
-            node['id']='T'+k.toString();k=k+1;
+            // node['id']='T'+k.toString();k=k+1;
+            console.log("============",egoID);
             $rootScope.egoList.push(node);
             return $rootScope.egoList;
         };

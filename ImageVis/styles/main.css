@@ -1,3 +1,7 @@
+.tick{
+    opacity: 0.6;
+}
+
 .d3-tip {
     line-height: 1;
     font-weight: bold;
@@ -334,7 +338,7 @@ th {
 
 .egoNameHead, .egoControlHead {
     border-bottom: 1px solid #eeeeee;
-    height: 257px;
+    height: 130px;
     vertical-align: middle;
     text-align: center;
     line-height: 57px;

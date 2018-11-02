@@ -502,6 +502,7 @@ vishope.factory('egoVisService', ['$http', 'dataService', 'pipService',
 
 
                                         drawChart(data, svg,padding,100,110);
+
                                     }
 
                     //     });
@@ -515,7 +516,33 @@ vishope.factory('egoVisService', ['$http', 'dataService', 'pipService',
             }
 
 
-            function drawChart(data, svg,padding,xx,yy) {
+           async  function drawChart(data, _original_svg,padding,xx,yy) {
+                var _is_click_2=false;
+                $('.ng-binding').on("click",function(){
+                var _str = this.innerHTML;
+                   var _T_this =_str.replace(/\s+/g,"");
+
+                   if(!_is_click_2)
+                    {$(this).css('background','#000');
+                        svg.selectAll('.g-button'+_T_this).style('fill-opacity','0.15'); _is_click_2=true; }
+                    else { svg.selectAll('rect').style('fill-opacity','0'); _is_click_2=false; $(this).css('background','#f3f3f3');}
+                    console.log(1);})
+                    .on("mouseover",function(){
+                        var _str = this.innerHTML;
+
+                        var _T_this =_str.replace(/\s+/g,"");  if(_T_this[0]!='T') return ;
+                        if(!_is_click_2)
+                        { svg.selectAll('.g-button'+_T_this).style('fill-opacity','0.07');  }
+
+                        // console.log(position);
+                    }).on("mouseout",function(){
+                    var _str = this.innerHTML;
+
+                    var _T_this =_str.replace(/\s+/g,"");    if(_T_this[0]!='T') return ;
+                    if(!_is_click_2)
+                    { svg.selectAll('.g-button'+_T_this).style('fill-opacity','0.0'); }
+
+                });
 
                 // console.log(colorload_data);
                 // console.log(data[0].imageID.substring(0,4)+'/'+data[0].imageID.substring(4,7));
@@ -525,7 +552,44 @@ vishope.factory('egoVisService', ['$http', 'dataService', 'pipService',
                 // var svvg = svg.append("g").attr("class","egoExpansionWrapper");
                 // svvg.call(tip);
                 // d3.select(".egoGlyphCanvas").call(tip);
-                var svg=svg.append("g").attr("class","egoExpansionWrapper").attr("transform","translate("+(200*(p_x-2006)-100+30)+","+yy+")");
+                var _position_of_each_icon = (200*(p_x-2006)-100+30);
+                var svg=_original_svg.append("g").attr("class","egoExpansionWrapper").attr("transform","translate("+_position_of_each_icon+","+yy+")");
+                    // .attr('x',0).attr('y',-50).attr('width',100).attr('height',100).attr('fill-opacity','0.0')
+                    // .on("mouseover",function(){
+                    //     var position =  this.getBBox();
+                    //     _original_svg.append('rect').attr('class','detailBorder').style('fill','#f0f0f0').attr('x',position.x+50).attr('y',position.y+50).attr('width',position.width+40)
+                    //         .attr('height',position.height+40).attr('fill','red').attr('rx','3px').attr('ry','3px').attr('stroke','none');
+                    //
+                    //     console.log(position);
+                    // }).on("mouseout",function(){
+                    //
+                    //     _original_svg.select('.detailBorder').data([]).exit().remove();
+                    //
+                    // });
+                var _if_click=false;
+
+                svg.append("rect").attr("class","g-button"+_Tnum+' '+'y'+p_x.toString()).attr("transform","translate("+(-100)+","+(-100)+")")
+                    .attr('x',0).attr('y',0).attr('width',200).attr('height',200).attr('fill-opacity','0.0')
+                .on("mouseover",function(){
+                    if(!_if_click)
+                    $(this).css('fill-opacity','0.07');
+
+                    // console.log(position);
+                }).on("mouseout",function(){
+                    if(!_if_click)
+                    $(this).css('fill-opacity','0.0');
+
+                }).on("click",function(){
+                    if(!_if_click){
+                        _if_click=true;
+                        $(this).css('fill-opacity','0.15');
+                    }else {
+                        _if_click=false;
+                        $(this).css('fill-opacity','0.0');
+                    }
+
+
+                });
 
 
                 // console.log(svg.select('.egoExpansionWrapper'));
@@ -630,10 +694,10 @@ vishope.factory('egoVisService', ['$http', 'dataService', 'pipService',
 
 
 
-                _my_tip.html(function(d) {
-                    console.log(d);
+               await _my_tip.html(function(d) {
+                    // console.log(d);
                     var _length = d.data.id.length;
-                    console.log(_length);
+                    // console.log(_length);
                     var url = './image/'+d.data.data.paperID.substring(13,17)+'/'+d.data.id.substring(_length-7,_length-4)+"/"+d.data.data.paperID+"/"+d.data.id;
                     var  string = "<img  src=  " +url +" width='200px' />";
 
@@ -1970,6 +2034,43 @@ vishope.factory('egoVisService', ['$http', 'dataService', 'pipService',
             var timelineCanvas = d3.select('#timelineCanvas');
             timelineCanvas
                 .attr('width', timelineConfig.width).attr('height',250);
+            var _is_click_3=false;
+            timelineCanvas.append("g").selectAll('rect').data([0,1,2,3,4,5,6,7,8,9]).enter().append('rect')
+                .attr('x',function(d){ return d*195+40; }).attr('y',function(d){return 0;}).attr('width',195).attr('height',200).attr('fill',function(d){if(d%2)return 'white';return '#f3f3f3';})
+                .on('click',function(d){
+                    if(!_is_click_3)
+                    { $(this).css('fill','#d9d9d9'); _is_click_3=true;}
+                    else{
+                        if(d%2)
+                        $(this).css('fill','white');
+                        else
+                        $(this).css('fill','#f3f3f3');
+                            _is_click_3=false;
+                    }
+                })
+                .on("mouseover",function(d){
+
+
+                            if(!_is_click_3){
+                                // console.log( $();
+                                $('.y'+(d+2007).toString()).css('fill','black').css('fill-opacity','0.07');
+                            }
+
+
+                            // console.log(position);
+                        }).on("mouseout",function(d){
+
+
+
+                        if(!_is_click_3)
+                        {   $('.y'+(d+2007).toString()).css('fill','black').css('fill-opacity','0.0');}
+
+                    });
+            // timelineCanvas.append("g").selectAll('rect').data([0,1,2,3,4]).enter().append('rect')
+            //     .attr('x',function(d){ return d*390+40+190; }).attr('y',function(d){return 0;}).attr('width',200).attr('height',200).attr('fill','blue');
+
+
+
             var bar =  timelineCanvas.append("g").attr("transform", "translate(" + 20 + "," + 15 + ")");
             var bar2 =  timelineCanvas.append("g").attr("transform", "translate(" + 20 + "," + 15 + ")");
             var _text =timelineCanvas.append("g").attr("transform", "translate(" + 20 + "," + 15 + ")");
@@ -1978,39 +2079,104 @@ vishope.factory('egoVisService', ['$http', 'dataService', 'pipService',
                 .range([0, 1750]);
 
             var y2 = d3.scaleLinear()
-                .range([0, 200]);
+                .range([0, 50]);
             var y = d3.scaleLinear()
-                .range([0, 200]);
+                .range([0, 50]);
             x.domain([2007,2016]);
-            y.domain([1500,0]);
-            y2.domain([0,1500]);
+            y.domain([1300,0]);
+            y2.domain([0,1300]);
 
 
-            var xAxis = d3.axisBottom(x).tickFormat(d3.format(".0f"));
+            var xAxis = d3.axisBottom(x).tickSize(10).tickFormat(d3.format(".0f"))
+                // d3.selectAll('.tick').style('opacity','0');
 
-            var yAxis = d3.axisLeft(y).ticks(10);
+            var yAxis = d3.axisLeft(y).ticks(5);
             var Xx = bar.append("g")
                 .attr("class", "x axis")
-                .attr("transform", "translate(115," + 200 + ")").style("font-size","17px")
-            Xx.append("path").attr("stroke","#000").attr("d","M-95,0V0.5H0.5V0");
+                .attr("transform", "translate(115," + (200-130) + ")").style("font-size","30px").attr('opacity','0');
+            Xx.selectAll("path").attr('stroke','#f3f3f3');
+            Xx.append("path").attr("stroke","#f3f3f3").attr("d","M-195,0V0.5H0.5V0");
+            // XX.select('line');
                 Xx.call(xAxis)
                 .append("text").attr("font-size","20px")
                 .attr("class", "label")
                 .attr("x", 50)
                 .attr("y", -6).attr("dy","2em")
                 .style("text-anchor", "end")
-                .text("Sepal Width (cm)");
+                .text("Sepal Width (cm)");Xx.attr('opacity','0.8').selectAll('line').attr('opacity','0').attr('stroke','#f3f3f3');
+            Xx.selectAll("path").attr('stroke','#f3f3f3');
+            console.log("Text---------------------",Xx.selectAll('text'));
 
-            bar.append("g")
-                .attr("class", "y axis").attr("transform", "translate(20," + 0 + ")").style("font-size","10px")
-                .call(yAxis)
-                .append("text")
-                .attr("class", "label")
-                .attr("transform", "rotate(-90)")
-                .attr("y", 60)
-                .attr("dy", ".71em")
-                .style("text-anchor", "end")
-                .text("Sepal Length (cm)");
+
+            Xx.selectAll('text').on("click",function(){
+                var _str = this.innerHTML;
+                var _T_this =_str.replace(/\s+/g,"");
+                console.log(_T_this);
+                if(!_is_click_3)
+                {
+                    timelineCanvas
+                    $(this).css('background','#000');
+                    svg.selectAll('.g-button'+_T_this).style('fill-opacity','0.15'); _is_click_3=true;
+                }
+                else {
+                    svg.selectAll('rect').style('fill-opacity','0'); _is_click_2=false; $(this).css('background','#f3f3f3');
+                }
+
+
+            })
+            //     .on("mouseover",function(){
+            //         var _str = this.innerHTML;
+            //
+            //         var _T_this =_str.replace(/\s+/g,"");  if(_T_this[0]!='T') return ;
+            //         if(!_is_click_2)
+            //         { svg.selectAll('.g-button'+_T_this).style('fill-opacity','0.07');  }
+            //
+            //         // console.log(position);
+            //     }).on("mouseout",function(){
+            //     var _str = this.innerHTML;
+            //
+            //     var _T_this =_str.replace(/\s+/g,"");    if(_T_this[0]!='T') return ;
+            //     if(!_is_click_2)
+            //     { svg.selectAll('.g-button'+_T_this).style('fill-opacity','0.0'); }
+            //
+            // });
+            //
+            // {
+            //     var _if_click=false;
+            //
+            //     svg.append("rect").attr("class","g-button"+_Tnum).attr("transform","translate("+(-100)+","+(-100)+")")
+            //         .attr('x',0).attr('y',0).attr('width',200).attr('height',200).attr('fill-opacity','0.0')
+            //         .on("mouseover",function(){
+            //             if(!_if_click)
+            //                 $(this).css('fill-opacity','0.07');
+            //
+            //             // console.log(position);
+            //         }).on("mouseout",function(){
+            //         if(!_if_click)
+            //             $(this).css('fill-opacity','0.0');
+            //
+            //     }).on("click",function(){
+            //         if(!_if_click){
+            //             _if_click=true;
+            //             $(this).css('fill-opacity','0.15');
+            //         }else {
+            //             _if_click=false;
+            //             $(this).css('fill-opacity','0.0');
+            //         }
+            //
+            //
+            //     });
+            // }
+            // bar.append("g")
+            //     .attr("class", "y axis").attr("transform", "translate(20," + 20+ ")").style("font-size","10px")
+            //     .call(yAxis)
+            //     .append("text")
+            //     .attr("class", "label")
+            //     .attr("transform", "rotate(-90)")
+            //     .attr("y", 60)
+            //     .attr("dy", ".71em")
+            //     .style("text-anchor", "end")
+            //     .text("Sepal Length (cm)");
             d3.csv("data.csv",function(data) {
                 console.log("DATA",data,bar);
                 bar2.selectAll(".bar")
@@ -2022,7 +2188,7 @@ vishope.factory('egoVisService', ['$http', 'dataService', 'pipService',
                     })
                     .attr("y", function (d) {
                         // return 450 - y(d.Sizeear) - 250;
-                        return 200-y2(d.Sizeear);
+                        return 200-y2(d.Sizeear)-130;
                     })
                     .attr("width", 70)
                     .attr("height", function (d) {
@@ -2039,16 +2205,16 @@ vishope.factory('egoVisService', ['$http', 'dataService', 'pipService',
                         return x(d.Year) + 50+7-10+70;
                     })
                     .attr("y", function (d) {
-                        return 200-y2(d.ImageNumbers);
+                        return 200-y2(d.ImageNumbers)-130;
                     })
                     .attr("width", 70)
                     .attr("height", function (d) {
                         return y2(d.ImageNumbers);
                     }).attr("fill","rgb(162, 206, 65)");
-                _text.selectAll('text').data(data).enter().append('text').attr('x',function(d){return x(d.Year) + 50+7-10+70+20;})
-                    .attr('y',function(d){return 200-y2(d.ImageNumbers);}).text(function(d){return d.ImageNumbers;}).attr('fill','#C0C0C0');
-                _text2.selectAll('text').data(data).enter().append('text').attr('x',function(d){return x(d.Year) + 50+7-10+25;})
-                    .attr('y',function(d){return 200-y2(d.Sizeear);}).text(function(d){return d.Sizeear;}).attr('fill','#C0C0C0');
+                _text.selectAll('text').data(data).enter().append('text').attr('x',function(d){return x(d.Year) + 50+7-10+70+20-6;}).style("font-size","20px")
+                    .attr('y',function(d){return 200-y2(d.ImageNumbers)-130;}).text(function(d){return d.ImageNumbers;}).attr('fill','#C0C0C0');
+                _text2.selectAll('text').data(data).enter().append('text').attr('x',function(d){return x(d.Year) + 50+7-10+25-6;}).style("font-size","20px")
+                    .attr('y',function(d){return 200-y2(d.Sizeear)-130;}).text(function(d){return d.Sizeear;}).attr('fill','#C0C0C0');
 //                 var valueline = d3.line()
 //                     .x(function(d) { return x(d.Year); })
 //                     .y(function(d) { return y(d.Sizeear); });
@@ -2063,20 +2229,20 @@ vishope.factory('egoVisService', ['$http', 'dataService', 'pipService',
 //                         .ticks(10)
 //                 }
                 Xx.append("g")
-                    .attr("class", "grid").append("line").attr("stroke","#C0C0C0").attr("x1","-100")
+                    .attr("class", "grid").append("line").attr("stroke","#C0C0C0").attr("x1","-150")
                     .attr("x2","3000")
                     .attr("y1","-160")
                     .attr("y2","-160");
                 Xx.append("g")
-                    .attr("class", "grid").append("line").attr("stroke","#C0C0C0").attr("x1","-100")
+                    .attr("class", "grid").append("line").attr("stroke","#C0C0C0").attr("x1","-150")
                     .attr("x2","3000")
-                    .attr("y1","-106")
-                    .attr("y2","-106");
+                    .attr("y1","-40")
+                    .attr("y2","-40");
                 Xx.append("g")
-                    .attr("class", "grid").append("line").attr("stroke","#C0C0C0").attr("x1","-100")
+                    .attr("class", "grid").append("line").attr("stroke","#C0C0C0").attr("x1","-150")
                     .attr("x2","3000")
-                    .attr("y1","-52")
-                    .attr("y2","-52");
+                    .attr("y1","-0")
+                    .attr("y2","-0");
                 //     .attr("transform", "translate(0," + -200 + ")")
                 //     .call(make_x_gridlines()
                 //         .tickSize(200)
